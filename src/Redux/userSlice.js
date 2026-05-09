@@ -86,13 +86,15 @@ const userSlice = createSlice({
 
             if (senderAccount.balance > amount) {
                 senderAccount.balance -= amount;
-                const recipient = state.find(user => user.id === reciepientID);
+                const recipient = state.find(user => user.id === recipientID);
                 const recipientAccount = recipient.accounts.find(account => account.accountNumber === recipientAccountNumber);
                 recipientAccount.balance += amount;
                 sender.transactions.push({
                     id: sender.transactions.length + 1,
                     type: "debit",
                     amount: amount,
+                    name: recipient.fullName,
+                    accountName: recipientAccount.name,
                     memo: memo,
                     date: new Date().toISOString(),
                 });
@@ -100,6 +102,8 @@ const userSlice = createSlice({
                     id: recipient.transactions.length + 1,
                     type: "credit",
                     amount: amount,
+                    name: sender.fullName,
+                    accountName: senderAccount.name,
                     memo: memo,
                     date: new Date().toISOString(),
                 });

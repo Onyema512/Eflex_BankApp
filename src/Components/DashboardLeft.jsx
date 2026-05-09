@@ -18,30 +18,41 @@ const DashboardLeft = () => {
   const [accountID, setAccountID] = useState("");
   const dispatch =  useDispatch();
 
-    const findUserbyAccountNumber = (accountNumber) => {
+  const findUserbyAccountNumber = (accountNumber) => {
     // console.log(accountNumber);
-    const user = users.find(user => user.accounts.some(account => account.accountNumber === accountNumber));
-    console.log(user);
-    const accountInfo = user.accounts.find(account => account.accountNumber === accountNumber);
-    console.log({
-      id: user.id,
-      fullName: user.fullName,
-      account: accountInfo.name
-    })
+  const foundUser = users.find(user =>
+    user.accounts.some(
+    account => account.accountNumber === accountNumber
+    )
+  );
+
+  if (!foundUser) {
     setRecipientInfo({
-      id: user.id,
-      fullName: user.fullName,
-      account: accountInfo.name
+      id: 0,
+      fullName: "",
+      account: ""
     });
+    return;
   }
+
+  const accountInfo = foundUser.accounts.find(
+    account => account.accountNumber === accountNumber
+  );
+
+  setRecipientInfo({
+    id: foundUser.id,
+    fullName: foundUser.fullName,
+    account: accountInfo.name
+  });
+}
 
   const handleSendFunds = (e) => {
     e.preventDefault();
     dispatch(transferFunds({
       userID: user.id,
-      senderAccountID: fromAccount.id,
+      senderAccountID: fromAccount?.id,
       recipientAccountNumber: recipientAccountNumber,
-      reciepientID: recipientInfo.id,
+      recipientID: recipientInfo.id,
       amount: Number(amount),
       memo: memo,
     }));
@@ -82,7 +93,7 @@ const DashboardLeft = () => {
       <label>From Account</label>
       <select onChange={(e) => setAccountID(e.target.value)}>
         <option value="">Select Account</option>
-        {user.accounts.map((item, index) => (
+        {user?.accounts?.map((item, index) => (
           <option value={item.id} key={index}>
             {item.name}
           </option>

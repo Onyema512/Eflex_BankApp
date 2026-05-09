@@ -31,13 +31,43 @@ const DashboardRight = () => {
         <p>Transactions History</p>
         
         {
+         theTransactions?.map((transaction, index) => (
+    <div className="Bank_Content_Wrapper_Right_Bottom_Transaction" key={index}>
+      <div className="Transaction_Left">
+        <h4>
+          {transaction.type === "debit"
+            ? "Debit Transaction"
+            : "Credit Transaction"}
+        </h4>
+
+        <p>
+          {transaction.type === "debit"
+            ? `Sent to ${transaction.name}`
+            : `Received from ${transaction.name}`}
+        </p>
+
+        <small>{transaction.accountName}</small>
+        <small>{transaction.memo}</small>
+        <small>{transaction.date}</small>
+      </div>
+      <div className="Transaction_Right">
+        <h3 className={transaction.type === "debit" ? "Debit_Color" : "Credit_Color"}>               
+          {transaction.type === "debit" ? "-" : "+"}
+          &#8358; {transaction.amount}
+        </h3>
+      </div>
+
+    </div>
+  ))
+}
+        {/* {
           theTransactions?.map((transaction, index) => (
             <div className="Bank_Content_Wrapper_Right_Bottom_Transaction" key={index}>
               <span>{transaction.type === "debit" ? "Debit:" : "Credit:"}</span>
               <span>{transaction.type === "debit" ? "-" : "+"} &#8358; {transaction.amount}</span>
             </div>
           ))
-        }
+        } */}
       </div>
     </div>
   )

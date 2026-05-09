@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { AuthContext } from '../Context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { IoMenu } from "react-icons/io5";
 import '../Css/Header.css'
 
 const Header = () => {
@@ -17,9 +18,9 @@ const Header = () => {
         <div className="Header_Wrapper_Right">
           <div className="header_Profile_Holder">
             <div className="Header_Profile">U</div>
-            <h5>{user.fullName}</h5>
+            <h5>{user?.fullName}</h5>
           </div>
-          <button className="Btn Header_Btn" onClick={() => navigate("/")}>{user.fullName !== undefined ? "Log out" : "Login"}</button>
+          <button className="Btn Header_Btn" onClick={() => navigate("/")}>{user?.fullName !== undefined ? "Log out" : "Login"}</button>
 
           <div className="Header_Mobile_Toggle" >
             <IoMenu className="Icon" />
