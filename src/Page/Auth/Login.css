@@ -71,6 +71,13 @@
   letter-spacing: 0.5px;
 }
 
+.show_req{
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  color: blue;
+}
+
 .input_wrapper {
   display: flex;
   align-items: center;

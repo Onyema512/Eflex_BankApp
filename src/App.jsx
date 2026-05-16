@@ -4,6 +4,7 @@ import NotFound from './Components/NotFound'
 import Login from './Page/Auth/Login'
 import SignUp from './Page/Auth/SignUp'
 import Dashboard from './Page/Auth/Dashboard/Dashboard'
+import Terms from "./Page/Auth/Terms";
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/terms" element={<Terms />} />
          </Routes>
        </BrowserRouter>
  
