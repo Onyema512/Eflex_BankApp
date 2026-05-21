@@ -4,6 +4,7 @@ import "./Login.css";
 import { FaRegEye, FaRegEyeSlash, FaUser, FaLock } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { AuthContext } from "../../Context/AuthContext";
+import axios from "axios";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,10 +12,11 @@ const Login = () => {
   // const [email, setEmail] = useState("");
   // const [password, setPassword] = useState("");
   const { setUser } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
-    email: "",
+    emailAddress: "",
     password: "",
   });
   // const [errorMsg, setErrorMsg] = useState("");
@@ -23,18 +25,18 @@ const Login = () => {
 
   const holdEmail = (e) => {
     const newEmail = e.target.value;
-    setUserInfo({...userInfo, email: newEmail});
+    setUserInfo({...userInfo, emailAddress: newEmail});
 
     if (newEmail.trim() === "") {
       setErrorMsg3({
         err: true,
-        name: "email",
+        name: "emailAddress",
         msg: "You must add an Email"
       });
     } else if (!newEmail.includes("@")) {
       setErrorMsg3({
         err: true,
-        name: "email",
+        name: "emailAddress",
         msg: "Email must include at least one @ symbol"
       });
     } else {
@@ -119,10 +121,42 @@ const Login = () => {
     }
   }
 
-  const handleLogin = (e) => {
+  const BaseURL = import.meta.env.VITE_BASE_URL;
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    loginUser(userInfo.email, userInfo.password);
-  }
+    // loginUser(userInfo.email, userInfo.password);
+
+    if (
+      !errorMsg3.err &&
+      userInfo.emailAddress &&
+      userInfo.password
+    ) {
+      try {
+        setIsLoading(true);
+        console.log("LOGIN DATA:", userInfo);
+        const response = await axios.post(`${BaseURL}/login`, userInfo)
+        console.log("LOGIN RESPONSE:", response.data);
+        localStorage.setItem("Token", response.data.token);
+        // setUser(response.data.data);
+        alert("Login successful!");
+
+        setUserInfo({
+          emailAddress: "",
+          password: "",
+        })
+        navigate("/dashboard");
+      } catch (error) {
+        console.log("FULL ERROR:", error)
+        console.log("SERVER RESPONSE:", error.response?.data);
+        setIsLoading(false);
+      }
+    } else {
+      alert("Please fill all fields correctly");
+    }
+  };
+
+
 
   // const [password, setPassword] = useState("");
 
@@ -155,7 +189,7 @@ const Login = () => {
             </div>
             <span style={{color: "red", fontSize: "14px"}}>
               {
-                errorMsg3.msg && errorMsg3.name === "email" ? errorMsg3.msg : ""
+                errorMsg3.msg && errorMsg3.name === "emailAddress" ? errorMsg3.msg : ""
               }
             </span>
           </div>
@@ -197,8 +231,10 @@ const Login = () => {
             </a>
           </div>
 
-          <button type="submit" className="login_btn">
-            Login
+          <button type="submit" 
+          disabled={isLoading}
+          className="login_btn">
+            {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
 

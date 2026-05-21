@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
 import './Login.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FaRegEye, FaRegEyeSlash, FaUser, FaEnvelope, FaLock, FaIdCard,} from "react-icons/fa";
+import axios from 'axios';
 
   
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [userInfo, setUserInfo] = useState({
     fullName: "",
-    email: "",
+    emailAddress: "",
     password: "",
     confirmPassword: "",
   });
@@ -20,6 +23,7 @@ const SignUp = () => {
     err: false,
     strength: "weak"
   })
+  const [isLoading, setIsLoading] = useState(false);
 
 
   // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -51,6 +55,7 @@ const SignUp = () => {
   }
 
   const holdName = (e) => {
+      console.log("NAME INPUT:", e.target.value);
     const newName = e.target.value;
     setUserInfo({...userInfo, fullName: newName});
 
@@ -74,19 +79,20 @@ const SignUp = () => {
   };
 
   const holdEmail = (e) => {
+  
     const newEmail = e.target.value;
-    setUserInfo ({...userInfo, email: newEmail});
+    setUserInfo ({...userInfo, emailAddress: newEmail});
 
     if (newEmail.trim() === "") {
       setErrorMsg({
         err: true,
-        name: "email",
+        name: "emailAddress",
         msg: "Please enter a valid email"
       });
     } else if (!newEmail.includes("@")) {
       setErrorMsg({
         err: true,
-        name: "email",
+        name: "emailAddress",
         msg: "Email must include at least one @ symbol"
       });
     } else {
@@ -183,6 +189,8 @@ const SignUp = () => {
   // };
 
   const confirmPassword = (e) => {
+    console.log("CONFIRM PASSWORD:", e.target.value);
+
     const updatedPassword = e.target.value;
     setUserInfo({...userInfo, confirmPassword: updatedPassword});
 
@@ -201,6 +209,49 @@ const SignUp = () => {
     }
   };
 
+  const BaseURL = import.meta.env.VITE_BASE_URL;
+  console.log("Base URL:", BaseURL);
+
+  const handleSubmit = async (e) => {
+    console.log("FORM SUBMITTED");
+    e.preventDefault();
+    
+    console.log(userInfo)
+    if(
+      !errorMsg.err &&
+      userInfo.fullName &&
+      userInfo.emailAddress &&
+      userInfo.password &&
+      userInfo.confirmPassword
+    ) {
+      try {
+        setIsLoading(true);
+        console.log("SENDING DATA:", userInfo);
+        console.log("POST URL:", `${BaseURL}/register`);
+        const response = await axios.post(`${BaseURL}/register`, userInfo);
+        console.log("SIGNUP RESPONSE:", response.data);
+        alert (`Signup successful!
+          Account Number:  ${response.data.data.accountNumber}
+          Account Type: ${response.data.data.accountType}`)
+         
+        setUserInfo({
+          fullName: "",
+          emailAddress: "",
+          password: "",
+          confirmPassword: "",
+        })
+        navigate("/");
+
+      } catch (error) {
+        console.log("FULL ERROR:", error)
+        console.log("SERVER RESPONSE:", error.response?.data);
+        setIsLoading(false);
+      }
+    } else {
+      alert ("Fix the errors in the form below before submitting.");
+    }
+  };
+
   return (
     <div className='login_container'>
       <div className="login_card signup_card">
@@ -209,7 +260,7 @@ const SignUp = () => {
           <p>Join our bank and manage your finances</p>
         </div>
 
-        <form className="login_form" onSubmit={""}>
+        <form className="login_form" onSubmit={handleSubmit}>
 
           <div className="form_group">
             <label htmlFor="name">Full Name</label>
@@ -219,6 +270,7 @@ const SignUp = () => {
                 type="text"
                 id="name"
                 placeholder="Enter your full name"
+                value={userInfo.fullName}
                 onChange={holdName}
               />
             </div>
@@ -237,12 +289,13 @@ const SignUp = () => {
                 type="email"
                 id="email"
                 placeholder="Enter your email"
+                value={userInfo.emailAddress}
                 onChange={holdEmail}
               />
             </div>
             <span style={{color: "red", fontSize: "12px"}}>
               {
-                errorMsg.msg && errorMsg.name === "email" ? errorMsg.msg : ""
+                errorMsg.msg && errorMsg.name === "emailAddress" ? errorMsg.msg : ""
               }
             </span>
             
@@ -257,6 +310,7 @@ const SignUp = () => {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 placeholder="Create a strong password"
+                value={userInfo.password}
                 onChange={holdPassword}
                 onClick={() => setShowRequirements (true)}
                 onBlur={() => setShowRequirements (false)}
@@ -338,6 +392,7 @@ const SignUp = () => {
                 type={showConfirmPassword ? "text" : "password"}
                 id="confirmPassword"
                 placeholder="Confirm your password"
+                value={userInfo.confirmPassword}
                 onChange={confirmPassword}
               />
               <button
@@ -360,15 +415,15 @@ const SignUp = () => {
               <input type="checkbox" />
               <span>
                 I agree to the{" "}
-                <a href="#terms" className="terms_link" >
-                 <Link to="/terms"> Terms and Conditions </Link>
-                </a>
+                 <Link to="/terms" className='terms_link'> Terms and Conditions </Link>
               </span>
             </label>
           </div>
 
-          <button type="submit" className="login_btn">
-            Sign Up
+          <button type="submit" className="login_btn" 
+          disabled={isLoading}
+          onClick={() => console.log("BUTTON CLICKED")}>
+            {isLoading ? "Signing Up..." : "Sign Up"}
           </button>
         </form>
 
