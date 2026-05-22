@@ -123,6 +123,22 @@ const Login = () => {
 
   const BaseURL = import.meta.env.VITE_BASE_URL;
 
+  // const handleLog = async () => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const res = await axios.post(`${BaseURL}/login`, userInfo);
+  //     localStorage.setItem("Token", res.data.token);
+  //     if (res.status === Number(import.meta.env.VITE_status)) {
+  //       nav(`/dashboard/${res.data.data.fullName}`);
+  //       nav(`/dashboard/eze`)
+  //     }
+  //     console.log(res)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     // loginUser(userInfo.email, userInfo.password);

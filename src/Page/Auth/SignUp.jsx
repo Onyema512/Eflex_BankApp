@@ -3,6 +3,7 @@ import './Login.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaRegEye, FaRegEyeSlash, FaUser, FaEnvelope, FaLock, FaIdCard,} from "react-icons/fa";
 import axios from 'axios';
+import { ValidateInputs } from '../../Lib/HighFunction';
 
   
 const SignUp = () => {
@@ -211,6 +212,23 @@ const SignUp = () => {
 
   const BaseURL = import.meta.env.VITE_BASE_URL;
   console.log("Base URL:", BaseURL);
+
+  // const handleSub = async(e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     if(ValidateInputs(userInfo, errorMsg, setErrorMsg)) {
+  //       const res = await axios.post(`${BaseURL}/register`, userInfo);
+  //       alert(res.data.message);
+  //       if (res.status === 200 || res.status === 201) {
+  //         navigate("/")
+  //       }
+  //     }
+  //   } catch (error) {
+  //     alert(error.response.data.message);
+  //     console.log(error);
+  //   }
+  // };
 
   const handleSubmit = async (e) => {
     console.log("FORM SUBMITTED");
