@@ -3,6 +3,8 @@ import { AuthContext } from '../Context/AuthContext'
 import { useDispatch, useSelector } from 'react-redux';
 import { transferFunds } from '../Redux/userSlice';
 import '../Css/DashboardAll.css'
+import axios from 'axios';
+import { BaseURL } from '../Lib/HighFunction';
 
 const DashboardLeft = () => {
   const { user, fromAccount, setFromAccount } = useContext(AuthContext);
@@ -81,6 +83,37 @@ const DashboardLeft = () => {
     }
   }, [recipientAccountNumber]);
 
+  const token = localStorage.getItem("Token");
+  const [accountData, setAccountData] = useState([]);
+
+  const getAvailableBalance = async() => {
+    const AccountRes = await axios.get(`${BaseURL}/allAccounts`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    console.log("AccountRes", AccountRes);
+    setAccountData(AccountRes?.data?.data);
+  }
+  useEffect(() => {
+    getAvailableBalance();
+  }, []);
+  console.log("accountData", accountData);
+
+    const userId = localStorage.getItem("Id");
+    const [userData, setUserData] = useState({});
+    
+    const handleGetOneUser = async () => {
+      const userRes = await axios.get(`${BaseURL}/user/${userId}`);
+      setUserData(userRes?.data?.data);
+    }
+
+    useEffect(() => {
+      handleGetOneUser();
+    }, [userId]);
+    console.log("userData", userData);
+
   
   return (
     <div className='Bank_Form_Wrapper_Left'>
@@ -93,9 +126,9 @@ const DashboardLeft = () => {
       <label>From Account</label>
       <select onChange={(e) => setAccountID(e.target.value)}>
         <option value="">Select Account</option>
-        {user?.accounts?.map((item, index) => (
+        {accountData?.map((item, index) => (
           <option value={item.id} key={index}>
-            {item.name}
+            {item.accountType} - {item.accountNumber}
           </option>
         ))}
       </select>
@@ -116,7 +149,7 @@ const DashboardLeft = () => {
       <input
         type={"text"}
         placeholder={"Full Name"}
-        value={recipientInfo?.fullName}
+        value={userData?.fullName}
       />
     </div>
 

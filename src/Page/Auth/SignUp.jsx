@@ -213,62 +213,62 @@ const SignUp = () => {
   const BaseURL = import.meta.env.VITE_BASE_URL;
   console.log("Base URL:", BaseURL);
 
-  // const handleSub = async(e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     if(ValidateInputs(userInfo, errorMsg, setErrorMsg)) {
-  //       const res = await axios.post(`${BaseURL}/register`, userInfo);
-  //       alert(res.data.message);
-  //       if (res.status === 200 || res.status === 201) {
-  //         navigate("/")
-  //       }
-  //     }
-  //   } catch (error) {
-  //     alert(error.response.data.message);
-  //     console.log(error);
-  //   }
-  // };
-
-  const handleSubmit = async (e) => {
-    console.log("FORM SUBMITTED");
+  const handleSub = async(e) => {
     e.preventDefault();
-    
-    console.log(userInfo)
-    if(
-      !errorMsg.err &&
-      userInfo.fullName &&
-      userInfo.emailAddress &&
-      userInfo.password &&
-      userInfo.confirmPassword
-    ) {
-      try {
-        setIsLoading(true);
-        console.log("SENDING DATA:", userInfo);
-        console.log("POST URL:", `${BaseURL}/register`);
-        const response = await axios.post(`${BaseURL}/register`, userInfo);
-        console.log("SIGNUP RESPONSE:", response.data);
-        alert (`Signup successful!
-          Account Number:  ${response.data.data.accountNumber}
-          Account Type: ${response.data.data.accountType}`)
-         
-        setUserInfo({
-          fullName: "",
-          emailAddress: "",
-          password: "",
-          confirmPassword: "",
-        })
-        navigate("/");
 
-      } catch (error) {
-        console.log("FULL ERROR:", error)
-        console.log("SERVER RESPONSE:", error.response?.data);
-        setIsLoading(false);
+    try {
+      if(ValidateInputs(userInfo, errorMsg, setErrorMsg)) {
+        const res = await axios.post(`${BaseURL}/register`, userInfo);
+        alert(res.data.message);
+        if (res.status === 200 || res.status === 201) {
+          navigate("/")
+        }
       }
-    } else {
-      alert ("Fix the errors in the form below before submitting.");
+    } catch (error) {
+      alert(error.response.data.message);
+      console.log(error);
     }
   };
+
+  // const handleSubmit = async (e) => {
+  //   console.log("FORM SUBMITTED");
+  //   e.preventDefault();
+    
+  //   console.log(userInfo)
+  //   if(
+  //     !errorMsg.err &&
+  //     userInfo.fullName &&
+  //     userInfo.emailAddress &&
+  //     userInfo.password &&
+  //     userInfo.confirmPassword
+  //   ) {
+  //     try {
+  //       setIsLoading(true);
+  //       console.log("SENDING DATA:", userInfo);
+  //       console.log("POST URL:", `${BaseURL}/register`);
+  //       const response = await axios.post(`${BaseURL}/register`, userInfo);
+  //       console.log("SIGNUP RESPONSE:", response.data);
+  //       alert (`Signup successful!
+  //         Account Number:  ${response.data.data.accountNumber}
+  //         Account Type: ${response.data.data.accountType}`)
+         
+  //       setUserInfo({
+  //         fullName: "",
+  //         emailAddress: "",
+  //         password: "",
+  //         confirmPassword: "",
+  //       })
+  //       navigate("/");
+
+  //     } catch (error) {
+  //       console.log("FULL ERROR:", error)
+  //       console.log("SERVER RESPONSE:", error.response?.data);
+  //       setIsLoading(false);
+  //     }
+  //   } else {
+  //     alert ("Fix the errors in the form below before submitting.");
+  //   }
+  // };
 
   return (
     <div className='login_container'>
@@ -278,7 +278,7 @@ const SignUp = () => {
           <p>Join our bank and manage your finances</p>
         </div>
 
-        <form className="login_form" onSubmit={handleSubmit}>
+        <form className="login_form" onSubmit={handleSub}>
 
           <div className="form_group">
             <label htmlFor="name">Full Name</label>

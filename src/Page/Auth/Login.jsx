@@ -123,54 +123,58 @@ const Login = () => {
 
   const BaseURL = import.meta.env.VITE_BASE_URL;
 
-  // const handleLog = async () => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const res = await axios.post(`${BaseURL}/login`, userInfo);
-  //     localStorage.setItem("Token", res.data.token);
-  //     if (res.status === Number(import.meta.env.VITE_status)) {
-  //       nav(`/dashboard/${res.data.data.fullName}`);
-  //       nav(`/dashboard/eze`)
-  //     }
-  //     console.log(res)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // };
-
-  const handleLogin = async (e) => {
+  const handleLog = async (e) => {
     e.preventDefault();
-    // loginUser(userInfo.email, userInfo.password);
 
-    if (
-      !errorMsg3.err &&
-      userInfo.emailAddress &&
-      userInfo.password
-    ) {
-      try {
-        setIsLoading(true);
-        console.log("LOGIN DATA:", userInfo);
-        const response = await axios.post(`${BaseURL}/login`, userInfo)
-        console.log("LOGIN RESPONSE:", response.data);
-        localStorage.setItem("Token", response.data.token);
-        // setUser(response.data.data);
-        alert("Login successful!");
-
-        setUserInfo({
-          emailAddress: "",
-          password: "",
-        })
-        navigate("/dashboard");
-      } catch (error) {
-        console.log("FULL ERROR:", error)
-        console.log("SERVER RESPONSE:", error.response?.data);
-        setIsLoading(false);
+    try {
+      const res = await axios.post(`${BaseURL}/login`, userInfo);
+      console.log("res", res);
+      localStorage.setItem("Token", res.data.token);
+      localStorage.setItem("Id", res.data.user._id)
+      if (res.status === Number(import.meta.env.VITE_status)) {
+        alert("Login successful!")
+        navigate(`/dashboard/${res.data.user.fullName}`);
+        // nav(`/dashboard/eze`)
+        // navigate("/dashboard")
       }
-    } else {
-      alert("Please fill all fields correctly");
+      console.log(res)
+    } catch (error) {
+      console.log(error)
     }
   };
+
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   // loginUser(userInfo.email, userInfo.password);
+
+  //   if (
+  //     !errorMsg3.err &&
+  //     userInfo.emailAddress &&
+  //     userInfo.password
+  //   ) {
+  //     try {
+  //       setIsLoading(true);
+  //       console.log("LOGIN DATA:", userInfo);
+  //       const response = await axios.post(`${BaseURL}/login`, userInfo)
+  //       console.log("LOGIN RESPONSE:", response.data);
+  //       localStorage.setItem("Token", response.data.token);
+  //       // setUser(response.data.data);
+  //       alert("Login successful!");
+
+  //       setUserInfo({
+  //         emailAddress: "",
+  //         password: "",
+  //       })
+  //       navigate("/dashboard");
+  //     } catch (error) {
+  //       console.log("FULL ERROR:", error)
+  //       console.log("SERVER RESPONSE:", error.response?.data);
+  //       setIsLoading(false);
+  //     }
+  //   } else {
+  //     alert("Please fill all fields correctly");
+  //   }
+  // };
 
 
 
@@ -191,7 +195,7 @@ const Login = () => {
           <p>Secure access to your account</p>
         </div>
 
-        <form className="login_form" onSubmit={handleLogin}>
+        <form className="login_form" onSubmit={handleLog}>
 
           <div className="form_group">
             <label htmlFor="email">Email Address</label>

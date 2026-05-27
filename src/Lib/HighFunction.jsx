@@ -16,3 +16,18 @@ export const ValidateInputs = (userData, error, setErrorMsg) => {
         return false;
     }
 };
+
+export const BaseURL = import.meta.env.VITE_BASE_URL;
+
+export const GetProfile = (profileName) => {
+    const profile = profileName?.charAt(0);
+    return profile;
+}
+
+export const getInitials = (profile) => {
+    const initials = profile
+    ?.split(" ")
+    ?.map((name) =>name.charAt(0))
+    ?.join("")
+    return initials;
+}

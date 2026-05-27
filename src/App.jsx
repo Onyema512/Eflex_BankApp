@@ -17,7 +17,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           
           <Route element= {<Private/>}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/:fullName" element={<Dashboard />} />
           </Route>
 
           <Route path="/terms" element={<Terms />} />
